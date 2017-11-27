@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="./css/main.css">
 <script type="text/javascript" src="./js/jquery.min.js"  ></script>
-<script type="text/javascript" src="./js/date.js"  ></script>
+<script type="text/javascript" src="./js/calendar.js"  ></script>
 <style>
 	.aa{
 		margin: 100px;
@@ -20,12 +20,21 @@
 </style>
 <body>
 	<div class="div">
-		<input type="text" class="aa" >
+		<input type="text" class="aa" readonly="" >
+		<input type="text" class="bb" readonly="">
+		<input type="text" class="cc" readonly="">
 	</div>
 	
 </body>
 <script>
-	$('.aa').Calendar()
+	$('.aa').Calendar({
+		format:"YYYY-MM-DD hh:mm:ss"
+	})
 
+	$('.bb').Calendar({
+		format:"YYYY-MM-DD hh:mm"
+	})
+
+	$('.cc').Calendar()
 </script>
 </html>

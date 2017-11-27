@@ -1,8 +1,13 @@
 ;(function($,window,document,undefined) {
   var _data = new Date();
   var MyDate = function(ele,opt) {
-    var html = '<div class="wrapper"></div>'
-    $('body').append(html)
+
+    if($('.wrapper').length == 0 ){
+        var html = '<div class="wrapper"></div>'
+        $('body').append(html)
+    }
+
+      
 
     this.el = ele
     this.elName = ""
@@ -21,7 +26,8 @@
     this.defaults = {
      language:'CN',
      beginYears:1900,
-     endYears:2050
+     endYears:2050,
+     format:'YYYY-MM-DD'
     };
 
     this.options = $.extend(true, this.defaults, opt) ;  //自定义覆盖默认设置
@@ -31,19 +37,23 @@
     
 
     this._init();
-    this.contorl();
+    
 
     
 
     var _this = this
     this.el.click(function(){
-      // _this.elName = _this.el.attr("class")
+
+      window.elName = _this.el.attr("class")
       $('.wrapper').css({
         "position":"absolute",
         "left":_this.left+"px",
         "top":(_this.top+_this.height)+"px",
         "zIndex":999
       }).show()
+
+      _this.contorl();
+
     })
 
   };
@@ -83,9 +93,13 @@
         '<div class="time-second"></div>',
       '</div>'].join('')) ; 
 
+    var format = this.options.format
+
+
     this.showHour()  //渲染时
-    this.showMinute()  //渲染分
-    this.showSecond()  //渲染秒
+      this.showMinute()  //渲染分
+      this.showSecond()  //渲染秒
+   
 
 
 
@@ -96,9 +110,6 @@
         '<input type="button" class="operate-close" value="关闭" />',
       '</div>'].join('')) ; 
 
-
-
-
   };
 
 
@@ -107,6 +118,8 @@
 
   dt.contorl = function(){
     var  _this = this ;
+
+   
     _this.$ele.on('change','.contorl-years', function(event) {
       _this.year = $(this).find('option:selected').val();
       _this._init();
@@ -115,7 +128,7 @@
       _this._init();
     }).on('click', 'ul.date li:not(.gray)', function(event) {
       var $this = $(this);
-      _this.date = $this.html();
+      // _this.date = $this.html();
       _this.showWeek();
       $this.addClass('red').siblings().removeClass('red');
     });
@@ -123,11 +136,27 @@
     _this.$ele.on("click",'.operate-close',function(event){
       $('.wrapper').hide()
     }).on("click",'.operate-today',function(event){
-      var day = $('.date .red').html(),
-       day = day>9 ? day : "0" + day
-      var result = _this.year+"-"+_this.month+"-"+ day+" "+_this.hour+":"+_this.minute+":"+_this.second
 
-      _this.el.val(result)
+         var _data = new Date(),
+            year = _data.getFullYear(),
+            month = _data.getMonth()+1,
+            day = _data.getDate()
+
+         var format = _this.options.format
+        var result=[]
+
+
+        if(format == 'YYYY-MM-DD'){
+          result.push(year+"-"+month+"-"+day)
+        }else if(format == 'YYYY-MM-DD hh:mm'){
+          result.push(year+"-"+month+"-"+day+" "+_this.hour+":"+_this.minute)
+        }else if(format == 'YYYY-MM-DD hh:mm:ss'){
+          result.push(year+"-"+month+"-"+day+" "+_this.hour+":"+_this.minute+":"+_this.second)
+        }
+      
+
+      $("."+window.elName).val(result)
+      // _this.el.val(result)
         $('.wrapper').hide()
     }).on("click",'.operate-select',function(event){
       var year = $('.contorl-years').find('option:selected').val(),
@@ -138,16 +167,29 @@
           second = $('.time-second').find('option:selected').val()
 
           month = month>9 ? month : "0" + month
-          day = day>9 ? day : "0" + day
           hour = hour>9 ? hour : "0" + hour
           minute = minute>9 ? minute : "0" + minute
           second = second>9 ? second : "0" + second
 
+          if(day){
+           day = day>9 ? day : "0" + day
+          }else{
+            day = "01"
+          }
+           var format = _this.options.format
+        var result=[]
 
-        var result = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second
-        _this.el.val(result)
+
+        if(format == 'YYYY-MM-DD'){
+          result.push(year+"-"+month+"-"+day)
+        }else if(format == 'YYYY-MM-DD hh:mm'){
+          result.push(year+"-"+month+"-"+day+" "+hour+":"+minute)
+        }else if(format == 'YYYY-MM-DD hh:mm:ss'){
+          result.push(year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second)
+        }
+
+        $("."+window.elName).val(result)
         $('.wrapper').hide()
-      console.log(result)
     })
 
 
