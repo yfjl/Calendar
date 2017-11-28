@@ -105,6 +105,7 @@
 
     this.$ele.append([
       '<div class="operate">',
+        '<input type="button" class="operate-clear" value="清空" />',
         '<input type="button" class="operate-select" value="确认选择" />',
         '<input type="button" class="operate-today" value="今日" />',
         '<input type="button" class="operate-close" value="关闭" />',
@@ -133,9 +134,9 @@
       $this.addClass('red').siblings().removeClass('red');
     });
 
-    _this.$ele.on("click",'.operate-close',function(event){
+    _this.$ele.on("click",'.operate-close',function(event){   //关闭
       $('.wrapper').hide()
-    }).on("click",'.operate-today',function(event){
+    }).on("click",'.operate-today',function(event){  //今日
 
          var _data = new Date(),
             year = _data.getFullYear(),
@@ -158,7 +159,7 @@
       $("."+window.elName).val(result)
       // _this.el.val(result)
         $('.wrapper').hide()
-    }).on("click",'.operate-select',function(event){
+    }).on("click",'.operate-select',function(event){    //确认选择
       var year = $('.contorl-years').find('option:selected').val(),
           month = $('.contorl-month').find('option:selected').val(),
           day = $('.date .red').html(),
@@ -189,6 +190,9 @@
         }
 
         $("."+window.elName).val(result)
+        $('.wrapper').hide()
+    }).on("click",".operate-clear",function(event){   //清空
+        $("."+window.elName).val("")
         $('.wrapper').hide()
     })
 
