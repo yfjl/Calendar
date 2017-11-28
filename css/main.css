@@ -117,3 +117,8 @@ ul, li {
 .wrapper .operate .operate-select:hover{
 	background: #0cbbee;
 }
+
+
+.wrapper .operate .operate-clear{
+	background: #f06d73;
+}
