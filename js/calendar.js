@@ -19,9 +19,7 @@
     this.hour = _data.getHours()   //时
     this.minute = _data.getMinutes()   //分
     this.second = _data.getSeconds()  //秒
-    this.left = this.el.offset().left
-    this.top = this.el.offset().top
-    this.height = this.el.height()+6
+  
     this.monthArr = [31,28,31,30,31,30,31,31,30,31,30,31] ;   //12个月天数
     this.defaults = {
      language:'CN',
@@ -43,12 +41,15 @@
 
     var _this = this
     this.el.click(function(){
+        var  left = _this.el.offset().left
+        var  top = _this.el.offset().top
+        var height = _this.el.height()+12
 
       window.elName = _this.el.attr("class")
       $('.wrapper').css({
         "position":"absolute",
-        "left":_this.left+"px",
-        "top":(_this.top+_this.height)+"px",
+        "left":left+"px",
+        "top":(top+height)+"px",
         "zIndex":999
       }).show()
 
