@@ -1,3 +1,4 @@
+
 ;(function($,window,document,undefined) {
   var _data = new Date();
   var MyDate = function(ele,opt) {
@@ -19,31 +20,28 @@
     this.hour = _data.getHours()   //时
     this.minute = _data.getMinutes()   //分
     this.second = _data.getSeconds()  //秒
-  
+    this.options ={}
     this.monthArr = [31,28,31,30,31,30,31,31,30,31,30,31] ;   //12个月天数
     this.defaults = {
      language:'CN',
      beginYears:1900,
      endYears:2050,
-     format:'YYYY-MM-DD'
+     format:'YYYY-MM-DD',
+     startTime:"",
+     endTime:""
     };
 
-    this.options = $.extend(true, this.defaults, opt) ;  //自定义覆盖默认设置
 
-
-
-    
-
-    this._init();
-    
-
-    
 
     var _this = this
-    this.el.click(function(){
+    this.clickFun = function(){
         var  left = _this.el.offset().left
         var  top = _this.el.offset().top
         var height = _this.el.height()+12
+
+     _this.options = $.extend(true, _this.defaults, opt) ;  //自定义覆盖默认设置
+     _this._init();
+       
 
       window.elName = _this.el.attr("class")
       $('.wrapper').css({
@@ -55,7 +53,12 @@
 
       _this.contorl();
 
-    })
+    }
+    
+
+    
+    
+    this.el.on("click",this.clickFun )
 
   };
 
@@ -137,7 +140,7 @@
 
     _this.$ele.on("click",'.operate-close',function(event){   //关闭
       $('.wrapper').hide()
-    }).on("click",'.operate-today',function(event){  //今日
+    }).off("click",'.operate-today').on("click",'.operate-today',function(event){  //今日
 
          var _data = new Date(),
             year = _data.getFullYear(),
@@ -156,11 +159,9 @@
           result.push(year+"-"+month+"-"+day+" "+_this.hour+":"+_this.minute+":"+_this.second)
         }
       
+        _this.selectLimit(result)
 
-      $("."+window.elName).val(result)
-      // _this.el.val(result)
-        $('.wrapper').hide()
-    }).on("click",'.operate-select',function(event){    //确认选择
+    }).off("click",'.operate-select').on("click",'.operate-select',function(event){    //确认选择
       var year = $('.contorl-years').find('option:selected').val(),
           month = $('.contorl-month').find('option:selected').val(),
           day = $('.date .red').html(),
@@ -189,15 +190,56 @@
         }else if(format == 'YYYY-MM-DD hh:mm:ss'){
           result.push(year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second)
         }
+        _this.selectLimit(result)
+        
+ 
 
-        $("."+window.elName).val(result)
-        $('.wrapper').hide()
+       
     }).on("click",".operate-clear",function(event){   //清空
         $("."+window.elName).val("")
         $('.wrapper').hide()
     })
 
 
+  }
+
+
+  dt.selectLimit = function(result){
+      var _this = this;
+      var startTime = _this.options.startTime
+        var endTime = _this.options.endTime
+         var compare = new Date(result).getTime()
+        if(startTime){
+          var startTimes = new Date(startTime).getTime()
+          if(compare>startTimes){
+            alert("开始日期应小于或等于"+startTime)
+
+            return false
+          }
+        }
+        if(endTime){
+          var endTimes = new Date(endTime).getTime()
+          if(compare<endTimes){
+            alert("结束日期应大于或等于"+endTime)
+            return false
+          }
+        }
+        if(startTime && endTime){
+          var startTimes = new Date(startTime).getTime()
+          var endTimes = new Date(endTime).getTime()
+          if((compare<startTimes)||(compare>endTimes)){
+            alert("应选择在"+startTime+"与"+ endTime+  "之间的日期")
+            return false
+          }
+        }
+
+
+       $("."+window.elName).val(result)
+
+
+        
+        
+        $('.wrapper').hide()
   }
 
   //小时渲染
@@ -276,8 +318,6 @@
     var _week = [] ;
     this.week = new Date(this.year,this.month-1,this.date).getDay();
 
-    console.log(this.week)
-
     this.week = this.week==0?7:this.week;
     for (var i = 0; i < _week_ch.length; i++) {
       if (this.options.language=='CN') {
@@ -296,16 +336,11 @@
     var newDate = new Date(this.year,this.month-1,1) ;
     var firstLi = newDate.getDay();   //当月的第一天从周几开始
 
-
-    console.log("firstLi:"+firstLi)
-
     var _date = [] ;
     var _html = [] ;
     firstLi = firstLi==0?7:firstLi ;
 
-    console.log("this.month:"+this.month)
     var _length = (firstLi+this.monthArr[this.month-1])>36?42:35;
-      console.log(_length)
 
     var _prevMonthLenght = this.monthArr[(this.month-2)] ;
     var $date = $('.date') ;
@@ -336,7 +371,6 @@
   };
 
   $.fn.Calendar = function(opt){
-      console.log(this)
       new MyDate(this,opt);
   };
 
