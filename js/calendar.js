@@ -11,6 +11,7 @@
       
 
     this.el = ele
+
     this.elName = ""
     this.$ele  = $('.wrapper') ;
     this.year  = _data.getFullYear() ;          //年
@@ -28,7 +29,9 @@
      endYears:2050,
      format:'YYYY-MM-DD',
      startTime:"",
-     endTime:""
+     endTime:"",
+     startMessage:"开始时间",
+     endMessage:"结束时间"
     };
 
 
@@ -144,8 +147,18 @@
 
          var _data = new Date(),
             year = _data.getFullYear(),
-            month = _data.getMonth()+1,
-            day = _data.getDate()
+            month = _data.getMonth()+1 ,
+            month = month>9 ? month : "0" + month,
+            day = _data.getDate(),
+            day = day>9 ? day : "0" + day;
+
+            var hour  = _this.hour,
+                minute = _this.minute,
+                second = _this.second;
+
+             hour = hour>9 ? hour : "0" + hour
+            minute = minute>9 ? minute : "0" + minute
+            second = second>9 ? second : "0" + second
 
          var format = _this.options.format
         var result=[]
@@ -154,9 +167,9 @@
         if(format == 'YYYY-MM-DD'){
           result.push(year+"-"+month+"-"+day)
         }else if(format == 'YYYY-MM-DD hh:mm'){
-          result.push(year+"-"+month+"-"+day+" "+_this.hour+":"+_this.minute)
+          result.push(year+"-"+month+"-"+day+" "+hour+":"+minute)
         }else if(format == 'YYYY-MM-DD hh:mm:ss'){
-          result.push(year+"-"+month+"-"+day+" "+_this.hour+":"+_this.minute+":"+_this.second)
+          result.push(year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second)
         }
       
         _this.selectLimit(result)
@@ -212,7 +225,8 @@
         if(startTime){
           var startTimes = new Date(startTime).getTime()
           if(compare>startTimes){
-            alert("开始日期应小于或等于"+startTime)
+            // alert("开始日期应小于或等于"+startTime)
+            alert(_this.options.startMessage)
 
             return false
           }
@@ -220,7 +234,8 @@
         if(endTime){
           var endTimes = new Date(endTime).getTime()
           if(compare<endTimes){
-            alert("结束日期应大于或等于"+endTime)
+            // alert("结束日期应大于或等于"+endTime)
+            alert(_this.options.endMessage)
             return false
           }
         }

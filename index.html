@@ -27,15 +27,25 @@
 	
 </body>
 <script>
+
+var a = new Date()
+// console.log(a.toLocaleString())
+
+
+
+
 	$('.aa').Calendar({
 		format:"YYYY-MM-DD hh:mm:ss",
-		startTime:"2017-12-6 00:00:00"
+		startTime:"2017-12-6 00:00:00",
+		startMessage:"请选择小于2017-12-6 00:00:00时间"
 	})
 
 	$('.bb').Calendar({
 		format:"YYYY-MM-DD hh:mm:ss",
-		endTime:"2017-12-10 00:00:00"
+		endTime:new Date().getTime(),
+		endMessage:"请选择大于当前时间"
 	})
+	
 
 	$('.cc').Calendar()
 </script>
